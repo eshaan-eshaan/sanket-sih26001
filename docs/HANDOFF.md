@@ -1,6 +1,6 @@
 # SANKET — Project Handoff
 
-**Written 25 Aug 2026 (D1) · Last updated 29 Aug 2026 (§3, thirteenth pass) · Ship 31 Aug 2026 · SIH PS 26001 · MDoNER**
+**Written 25 Aug 2026 (D1) · Last updated 29 Aug 2026 (§3, fourteenth pass) · Ship 31 Aug 2026 · SIH PS 26001 · MDoNER**
 
 > **Read this first if you are joining the project.** It tells you what state everything is in, what is decided, what is still open, and what will kill us. It is a status document, not a plan — the plan lives in `README.md` §9 and `FEATURES.md`.
 
@@ -10,7 +10,7 @@
 
 We are building **SANKET**, a landslide early-warning platform for all 8 North Eastern states. Terrain physics + live rainfall + **computer vision** produce a live, explained, four-level risk surface. A district officer sees which slopes are dangerous tonight and *why*; a field officer reports a crack from a phone with no signal; the system backtests against the real Noney 2022 disaster to prove it would have caught it.
 
-**Right now: a working mocked prototype exists at `web/`** (React + Vite, 8 views, real GIS boundaries for all 118 districts, all data hardcoded/honestly-labelled as mock — see §3). **The live backend, trained ML models, and MapLibre production map do not exist yet** — the D1–D7 plan in §5 describes that build and was not followed as written; the days instead went into the prototype. See §3a before demoing or planning further work.
+**Right now: a working mocked prototype exists at `web/`** (React + Vite, 8 views, real GIS boundaries for all 118 districts, all data hardcoded/honestly-labelled as mock — see §3), **and it is live and deployed**: **https://sanket-sih26001.vercel.app** (see §3, fourteenth pass). **The live backend, trained ML models, and MapLibre production map do not exist yet** — the D1–D7 plan in §5 describes that build and was not followed as written; the days instead went into the prototype. See §3a before demoing or planning further work.
 
 ---
 
@@ -174,8 +174,16 @@ Three independent audits were run and their key claims spot-checked. **These are
 - Confirmed the core honesty commitment established throughout this project holds at the single most-watched moment of the demo: the Backtesting finale's "Warning Lead Time" panel still shows "PENDING CALCULATION," not a fabricated number, even after 13 rounds of changes.
 - Confirmed graceful coexistence with the LiveTicker toast (fired twice during rehearsal, no visual collision with the demo overlay) and clean entry/exit (the `content--demo-active` class is correctly removed on Exit/Finish — checked `max-height` reverts to `none`, not left stuck).
 
+**Update (29 Aug, fourteenth pass — pre-deploy bug check + deployed to Vercel):** User: "done? check for any bugs? then we will deploy this to vercel."
+- **Pre-deploy audit found one real, deploy-blocking bug**: `App.jsx` imported `./components/TopBar.jsx` (capital B) but the actual file is `Topbar.jsx` (lowercase b). Windows (the dev machine) has a case-insensitive filesystem, so this silently worked in `npm run dev` the entire project — it would have hard-failed on Vercel's Linux build servers, which are case-sensitive. Found by checking every relative import against real on-disk filenames, not by trusting the working dev server. Fixed the import; re-verified with a real production build (`npm run build`) served locally via `vite preview` — renders correctly, zero console errors. No other case mismatches found (`GlobalSearch.jsx` had one string match on "topbar" but it was a code comment, harmless).
+- **Deployed via GitHub, not a direct file upload.** Original plan was `deploy_to_vercel`'s direct file-tree upload (no git needed), but one generated file (`nerGeo.js`, the 118-district SVG path data) is a single 49,277-character line that exceeds the file-read tool's per-call token cap, so its content couldn't be reliably inlined into a deploy payload. Asked the user, who confirmed: initialise git, push to a new **private** GitHub repo, then link Vercel to it via git — this also gets auto-deploy-on-push for free going forward, which the direct-upload path wouldn't have.
+- `git init` at the project root (`.gitignore` already correctly excluded `node_modules/`, `web/dist/`, etc.), one commit, pushed to **https://github.com/eshaan-eshaan/sanket-sih26001** (private). Commit author corrected mid-flight from the wrong email to the one actually tied to the user's GitHub account, `eshaan1311@gmail.com`, after the user caught it.
+- Linked via Vercel's `create_git_project` with `rootDirectory: web` (monorepo-style root — the repo root also holds `docs/`, `deck/`, etc., not just the app). Vercel auto-detected the framework (`vite`) correctly with no manual build-command override needed. First deployment (`dpl_3AMdco1MHMMcUWBft8FTFnBccKt2`) built clean and went to `target: production` automatically since it was the production branch's first deploy.
+- **Verified the live deployment itself**, not just the build's exit status: loaded `https://sanket-sih26001.vercel.app` in a fresh browser tab, confirmed the Dashboard renders its real content (118 monitored districts, KPI cards, NER map, district table), navigated to GIS Risk Map and confirmed the layer panel and client-side routing work, checked the network tab (all requests 200), and checked the console (zero errors) on both views.
+- Live URL: **https://sanket-sih26001.vercel.app** · Vercel project: `sanket-sih26001` (team `eshaan1311-2715's projects`) · Inspector: `https://vercel.com/eshaan1311-2715s-projects/sanket-sih26001`.
+
 ### Not started at all
-- Repo not initialised · no `docker-compose.yml` · no database schema · no migrations
+- No `docker-compose.yml` · no database schema · no migrations · no CI beyond Vercel's own git-push auto-deploy
 - **The entire spatial layer.** PharmaBoard has PostGIS installed but **zero `ST_*` calls anywhere** — this is net-new work, not a port, and it is the biggest hidden cost in the plan.
 - **The live backend, the real ML models, and MapLibre.** The prototype's map now uses **real state and district boundaries** (dissolved from Survey-derived district polygons, see `web/geodata_src/`) rendered as static SVG — genuine geodata, just not the live MapLibre tile stack `ARCHITECTURE.md` specifies, and its risk scores are hand-authored, not model output. All 52 features in `FEATURES.md`
 - Road connectivity analysis (which villages are cut off) — no routing primitives exist to inherit; the prototype's "at-risk villages" list is hardcoded per zone, not computed
@@ -307,7 +315,9 @@ D:\Coding\PROJECTS\SANKET-SIH26001\
 
 **Reference codebase:** `D:\antigravity\proud-bohr` (PharmaBoard / "DoneHai")
 **Architecture diagrams:** https://claude.ai/code/artifact/b08fa1df-98e1-4363-9fec-cf07fbe59510
+**Repo (private):** https://github.com/eshaan-eshaan/sanket-sih26001
+**Live prototype:** https://sanket-sih26001.vercel.app (auto-deploys on push to `master`, see §3, fourteenth pass)
 
 ---
 
-*Planning complete and verified. A mocked frontend prototype is built (`web/`, see §3) — the live backend, trained models, and real GIS/tile stack are not. See §0 and §3a.*
+*Planning complete and verified. A mocked frontend prototype is built and deployed live (`web/`, see §3, fourteenth pass) — the live backend, trained models, and real GIS/tile stack are not. See §0 and §3a.*
