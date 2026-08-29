@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "mtime": 1787716123.8985283,
+    "ast_hash": "2de59193610be4eb4cf7a2413bd65667",
+    "semantic_hash": "2de59193610be4eb4cf7a2413bd65667"
+  },
+  "docs/ARCHITECTURE.md": {
+    "mtime": 1787635201.303857,
+    "ast_hash": "fc326885b2d59ecfaeb7a8546ee3fcba",
+    "semantic_hash": "fc326885b2d59ecfaeb7a8546ee3fcba"
+  },
+  "docs/FEATURES.md": {
+    "mtime": 1787635196.9549632,
+    "ast_hash": "ec92e4bc00e8ed2f5b1e4c898e957c1d",
+    "semantic_hash": "ec92e4bc00e8ed2f5b1e4c898e957c1d"
+  },
+  "docs/HANDOFF.md": {
+    "mtime": 1787635654.7477422,
+    "ast_hash": "9a7aea09525f852fa2789f2b6c3421d1",
+    "semantic_hash": "9a7aea09525f852fa2789f2b6c3421d1"
+  },
+  "docs/PRD.md": {
+    "mtime": 1787634583.072398,
+    "ast_hash": "c0b4408d3dc04c8adf4550756f7902a8",
+    "semantic_hash": "c0b4408d3dc04c8adf4550756f7902a8"
+  },
+  "docs/dashboard-spec.md": {
+    "mtime": 1787595962.360334,
+    "ast_hash": "078dd3d9a8b896449672667f434a0bce",
+    "semantic_hash": "078dd3d9a8b896449672667f434a0bce"
+  },
+  "docs/data-sources.md": {
+    "mtime": 1787714034.9567015,
+    "ast_hash": "2d6389a5ce82b4c69839013601e60f57",
+    "semantic_hash": "2d6389a5ce82b4c69839013601e60f57"
+  },
+  "docs/ml-research.md": {
+    "mtime": 1787714013.8173666,
+    "ast_hash": "27e729982ef62b48f71367bdb0c46b92",
+    "semantic_hash": "27e729982ef62b48f71367bdb0c46b92"
+  }
+}
